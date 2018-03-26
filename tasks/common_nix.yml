@@ -1,21 +1,16 @@
-- name: common | Combine dictionary options
-  set_fact:
-    concourse_web_options_combined: '{{ concourse_web_options_default | combine(concourse_web_options) }}'
-    concourse_worker_options_combined: '{{ concourse_worker_options_default | combine(concourse_worker_options) }}'
-
-- name: common | Ensure Concourse group exists
+- name: common | Ensure Concourse group exists (nix)
   group:
     name: '{{ concourseci_group }}'
     state: present
 
-- name: common | Ensure Concourse user exists
+- name: common | Ensure Concourse user exists (nix)
   user:
     home: '{{ concourseci_base_dir }}'
     name: '{{ concourseci_user }}'
     group: '{{ concourseci_group }}'
     system: yes
 
-- name: common | Ensure Concourse directory exists
+- name: common | Ensure Concourse directory exists (nix)
   file:
     path: '{{ item }}'
     state: directory
@@ -26,7 +21,7 @@
     - '{{ concourseci_bin_dir }}'
     - '{{ concourseci_log_dir }}'
 
-- name: common | Ensure Concourse .ssh dir
+- name: common | Ensure Concourse .ssh dir (nix)
   file:
     path: '{{ concourseci_ssh_dir }}'
     state: directory

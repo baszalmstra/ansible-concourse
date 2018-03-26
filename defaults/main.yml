@@ -1,15 +1,15 @@
 ---
 # Concourse version
-concourseci_version                         : "v3.9.2"
+concourseci_version                         : "v3.9.0"
 
 ## Dir structure
-concourseci_base_dir                        : "/opt/concourseci"
+concourseci_base_dir                        : "{{ '/opt/concourseci' if ansible_system != 'Win32NT' else 'C:/Concourse' }}"
 concourseci_bin_dir                         : "{{ concourseci_base_dir }}/bin"
 concourseci_worker_dir                      : "{{ concourseci_base_dir }}/worker"
 concourseci_ssh_dir                         : "{{ concourseci_base_dir }}/.ssh"
 
 ## Concourse log
-concourseci_log_dir                         : "/var/log/concourse"
+concourseci_log_dir                         : "{{ '/var/log/concourse' if ansible_system != 'Win32NT' else concourseci_base_dir + '/logs' }}"
 concourseci_log_worker                      : "{{ concourseci_log_dir }}/concourseci_worker.log"
 concourseci_log_web                         : "{{ concourseci_log_dir }}/concourseci_web.log"
 
@@ -81,4 +81,4 @@ concourseci_key_worker_public               : "{{ concourseci_worker_keys[concou
 concourseci_key_worker_private              : "{{ concourseci_worker_keys[concourseci_worker_position | int ].private}}"
 
 # temp solution to systemV issue and ansible :(
-concourse_ignore_errors                       : "{{ ansible_lsb['codename'] == 'xenial' | default(False)}}"
+concourse_ignore_errors                       : "{{ ansible_lsb is defined and ansible_lsb['codename'] == 'xenial' | default(False)}}"

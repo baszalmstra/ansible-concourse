@@ -1,0 +1,9 @@
+# Config
+{% for option, value in concourse_worker_options_combined.items() %}
+$env:{{ option }}="{{ value }}"
+{% endfor %}
+
+Write-Output "$(date) starting "
+
+# Exec worker
+& {{ concourseci_bin_dir }}/{{ concourseci_binary_file }} worker 2>&1

@@ -7,6 +7,7 @@
   notify:
     - restart concourse-web linux
     - restart concourse-web macosx
+    - restart concourse-web windows
 
 - name: restart concourse-worker
   debug:
@@ -15,6 +16,7 @@
   notify:
     - restart concourse-worker linux
     - restart concourse-worker macosx
+    - restart concourse-worker windows
 
 - name: restart concourse-web linux
   service:
@@ -27,11 +29,25 @@
   shell: launchctl stop {{ concourseci_launchd_web }} && launchctl start {{ concourseci_launchd_web }}
   when: "groups[concourseci_web_group] is defined and inventory_hostname in groups[concourseci_web_group] and ansible_system == 'Darwin'"
 
+- name: restart concourse-web windows
+  win_nssm:
+    name: "concourse-web"
+    state: "restarted"
+  when: "groups[concourseci_web_group] is defined and inventory_hostname in groups[concourseci_web_group] and ansible_system == 'Win32NT'"
+  ignore_errors: "{{ concourse_ignore_errors }}"
+
 - name: restart concourse-worker linux
   service:
     name="concourse-worker"
     state="restarted"
-  when: "groups[concourseci_worker_group] is defined and inventory_hostname in groups[concourseci_worker_group]"
+  when: "groups[concourseci_worker_group] is defined and inventory_hostname in groups[concourseci_worker_group] and ansible_system == 'Linux'"
+  ignore_errors: "{{ concourse_ignore_errors }}"
+
+- name: restart concourse-worker windows
+  win_nssm:
+    name: "concourse-worker"
+    state: "restarted"
+  when: "groups[concourseci_worker_group] is defined and inventory_hostname in groups[concourseci_worker_group] and ansible_system == 'Win32NT'"
   ignore_errors: "{{ concourse_ignore_errors }}"
 
 - name: restart concourse-worker macosx

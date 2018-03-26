@@ -7,21 +7,39 @@
   include: kernel_update.yml
   when: "ansible_os_family == 'Debian'"
 
-- name: Common tasks
-  include: common_nix.yml
+- name: common | Combine dictionary options
+  set_fact:
+    concourse_web_options_combined: '{{ concourse_web_options_default | combine(concourse_web_options) }}'
+    concourse_worker_options_combined: '{{ concourse_worker_options_default | combine(concourse_worker_options) }}'
+
+- block:
+  - name: Common tasks (nix)
+    include: common_nix.yml
+
+  - name: Install tasks (nix)
+    include: install_nix.yml
+    when: "ansible_system == 'Linux' or  ansible_system == 'Darwin'"
+
+  - name: Manage web node (nix)
+    include: web_nix.yml
+    when: "groups[concourseci_web_group] is defined and inventory_hostname in groups[concourseci_web_group]"
+
+  - name: Manage worker node (nix)
+    include: worker_nix.yml
+    when: "groups[concourseci_worker_group] is defined and inventory_hostname in groups[concourseci_worker_group]"
   when: "ansible_system == 'Linux' or  ansible_system == 'Darwin'"
 
-- name: Install tasks
-  include: install_nix.yml
-  when: "ansible_system == 'Linux' or  ansible_system == 'Darwin'"
+- block:
+  - name: Common tasks (windows)
+    include: common_windows.yml
 
-- name: Manage web node
-  include: web_nix.yml
-  when: "groups[concourseci_web_group] is defined and inventory_hostname in groups[concourseci_web_group] and (ansible_system == 'Linux' or ansible_system == 'Darwin')"
+  - name: Install tasks (nix)
+    include: install_windows.yml    
 
-- name: Manage worker node
-  include: worker_nix.yml
-  when: "groups[concourseci_worker_group] is defined and inventory_hostname in groups[concourseci_worker_group] and (ansible_system == 'Linux' or ansible_system == 'Darwin')"
+  - name: Manage worker node (windows)
+    include: worker_windows.yml
+    when: "groups[concourseci_worker_group] is defined and inventory_hostname in groups[concourseci_worker_group]"
+  when: "ansible_system == 'Win32NT'"
 
 - name: Flush handlers
   meta: flush_handlers

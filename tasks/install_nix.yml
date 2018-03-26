@@ -1,11 +1,11 @@
 ---
 
-- name: Install | Check Concourse archive stat
+- name: Install | Check Concourse archive stat (nix)
   stat:
     path: "{{ concourseci_bin_dir }}/{{ concourseci_binary_file }}"
   register: concourseci_binary_file_stat
 
-- name: Install | Download Concourse CI
+- name: Install | Download Concourse CI (nix)
   get_url:
     url: "{{ concourseci_download_url }}"
     dest: "{{ concourseci_bin_dir }}/{{ concourseci_binary_file }}"
@@ -17,7 +17,7 @@
    - restart concourse-worker
    - restart concourse-web
 
-- name: Install | Concourse link binary
+- name: Install | Concourse link binary (nix)
   file:
     src: "{{ concourseci_bin_dir }}/{{ concourseci_binary_file }}"
     dest: "{{ concourseci_bin_dir }}/concourse"
@@ -25,9 +25,3 @@
   notify:
    - restart concourse-worker
    - restart concourse-web
-
-- name: Install | Allow Concourse to bind to privileged ports
-  capabilities:
-    path: "{{ concourseci_bin_dir }}/{{ concourseci_binary_file }}"
-    capability: cap_net_bind_service+ep
-    state: present

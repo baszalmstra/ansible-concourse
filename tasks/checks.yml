@@ -3,7 +3,7 @@
 - name: checks | Fail if not running 64bit
   fail:
     msg: " Only 64 bit arch is supported."
-  when: ansible_userspace_bits != '64'
+  when: "(ansible_system != 'Win32NT' and ansible_userspace_bits != '64') or (ansible_system == 'Win32NT' and ansible_architecture != '64-bit')"
 
 - name: checks | Fail if using old style config < 3.0.0
   fail:
