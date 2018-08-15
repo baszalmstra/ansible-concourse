@@ -7,7 +7,11 @@
 export {{ option }}="{{ value }}:{{ concourse_worker_options_combined['CONCOURSE_TSA_PORT'] }}"
 {% elif (concourseci_version | version_compare('v3.10.0', '>=')) and option == 'CONCOURSE_TSA_PORT' %}
 {% else %}
+<<<<<<< HEAD
  export {{ option }}="{{ value }}"
+=======
+export {{ option }}="{{ value }}"
+>>>>>>> d1d6b2274984e266a4e345f8c49f98457450149b
 {% endif %}
 {% endfor %}
 

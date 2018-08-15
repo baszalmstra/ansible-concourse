@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ahelal/ansible-concourse.svg?branch=master)](https://travis-ci.org/ahelal/ansible-concourse)
 
-An easy way to deploy and manage a [Concourse CI](http://concourse.ci/) with a cluster of workers using ansible
+An easy way to deploy and manage a [Concourse CI](https://concourse-ci.org/) with a cluster of workers using ansible
 
 ## Note breaking changes as of version v3.0.0
 
@@ -11,7 +11,7 @@ Please look at [configuration section](https://github.com/ahelal/ansible-concour
 
 ## Requirements
 
-* Ansible 2.0 or higher
+* Ansible 2.3 or higher
 * PostgreSQL I recommend [ansible postgresql role](https://github.com/ANXS/postgresql)
 
 Supported platforms:
