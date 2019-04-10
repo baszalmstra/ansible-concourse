@@ -5,10 +5,19 @@
     path: "{{ concourseci_bin_dir }}/{{ concourseci_binary_file }}"
   register: concourseci_binary_file_stat
 
+- name: Install | Ensure Concourse directory exists (nix)
+  file:
+    path: '{{ concourseci_bin_dir }}/{{ concourseci_binary_package }}'
+    state: directory
+    owner: '{{ concourseci_user }}'
+    group: '{{ concourseci_group }}'
+    mode: '0750'
+
 - name: Install | Download Concourse CI (nix)
-  get_url:
-    url: "{{ concourseci_download_url }}"
-    dest: "{{ concourseci_bin_dir }}/{{ concourseci_binary_file }}"
+  unarchive:
+    src: "{{ concourseci_download_url }}"
+    remote_src: True
+    dest: "{{ concourseci_bin_dir }}/{{ concourseci_binary_package }}"    
     mode: 0755
   become_user: "{{ concourseci_user }}"
   register: concourseci_get

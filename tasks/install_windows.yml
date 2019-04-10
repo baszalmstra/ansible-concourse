@@ -5,11 +5,24 @@
     path: "{{ concourseci_bin_dir }}/{{ concourseci_binary_file }}"
   register: concourseci_binary_file_stat
 
+- name: Install | Ensure Concourse directory exists (windows)
+  win_file:
+    path: '{{ concourseci_bin_dir }}/{{ concourseci_binary_package }}'
+    state: directory
+
 - name: Install | Download Concourse CI (windows)
   win_get_url:
     url: "{{ concourseci_download_url }}"
-    dest: "{{ concourseci_bin_dir }}/{{ concourseci_binary_file }}"
+    dest: "{{ concourseci_bin_dir }}/{{ concourseci_binary_package }}{{ concourseci_ansible_archive_extension }}"
   register: concourseci_get
+  when: concourseci_binary_file_stat.stat.exists == False
+
+- name: Install | Extract Concourse CI (windows)
+  win_unzip:
+    src: "{{ concourseci_bin_dir }}/{{ concourseci_binary_package }}{{ concourseci_ansible_archive_extension }}"
+    dest: "{{ concourseci_bin_dir }}/{{ concourseci_binary_package }}"    
+    delete_archive: True
+  register: concourseci_unzip
   when: concourseci_binary_file_stat.stat.exists == False
   notify:
    - restart concourse-worker
