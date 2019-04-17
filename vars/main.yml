@@ -1,7 +1,7 @@
 ---
 
 concourseci_ansible_binary_extension  : "{{ '.exe' if ansible_system == 'Win32NT' else '' }}"
-concourseci_ansible_archive_extension : "{{ '.zip' if ansible_system == 'Win32NT' else '{{ concourseci_ansible_archive_extension }}' }}"
+concourseci_ansible_archive_extension : "{{ '.zip' if ansible_system == 'Win32NT' else '.tgz' }}"
 concourseci_ansible_system            : "{{ ansible_system | lower if ansible_system != 'Win32NT' else 'windows' }}"
 concourseci_binary_package            : "concourse_{{ concourseci_ansible_system }}_amd64_{{ concourseci_version }}"
 concourseci_binary_file               : "{{concourseci_binary_package}}/concourse/bin/concourse{{concourseci_ansible_binary_extension}}"
